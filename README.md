@@ -89,6 +89,86 @@ The models are evaluated using:
 - Dice Score: ~0.78
 - IoU: ~0.65
 
+
+## Pipeline
+
+### FCN Pipeline
+
+1. Data Collection  
+   - Load multi-temporal InSAR data (6-day, 12-day, 18-day)
+
+2. Data Preprocessing  
+   - Extract coherence and phase  
+   - Convert phase → cos(phase), sin(phase)  
+   - Form 3-channel input  
+
+3. Dataset Preparation  
+   - Combine all temporal data  
+   - Train-test split  
+
+4. Model  
+   - FCN with ResNet50 backbone  
+   - Output layer → 1 channel mask  
+
+5. Training  
+   - Forward pass → loss → backpropagation  
+   - Optimizer: Adam  
+   - Loss: BCEWithLogitsLoss  
+
+6. Optimization  
+   - Learning rate scheduler  
+   - Early stopping  
+   - Track: loss, accuracy, precision, recall  
+
+7. Evaluation  
+   - Dice Score  
+   - IoU  
+   - F1 Score  
+
+8. Output  
+   - Save best model  
+   - Generate graphs and predictions  
+
+---
+
+### ResUNet Pipeline
+
+1. Data Collection  
+   - Load multi-temporal InSAR data  
+
+2. Data Preprocessing  
+   - Coherence + cos(phase) + sin(phase)  
+   - Normalize inputs  
+
+3. Dataset Preparation  
+   - Merge all data  
+   - Train-test split  
+
+4. Model  
+   - Encoder (Residual Blocks)  
+   - Bridge  
+   - Decoder (Upsampling + Skip Connections)  
+   - Output: 1 channel mask  
+
+5. Training  
+   - Forward pass → loss → backpropagation  
+   - Optimizer: Adam  
+   - Loss: BCEWithLogitsLoss  
+
+6. Optimization  
+   - Learning rate scheduler  
+   - Gradient clipping  
+   - Track metrics  
+
+7. Evaluation  
+   - Dice, IoU, F1 Score  
+
+8. Output  
+   - Save best model  
+   - Compare with FCN and paper results
+  
+## NOTE: For Better visualisation prefer to visit the Pipeline.pdf section.
+
 ### Observation
 
 FCN outperforms ResUNet across all metrics for this dataset.  
